@@ -9,6 +9,7 @@ export interface PlayerProps {
     bpm: number
     loopRange: number
     loop: boolean,
+    metronomeOutput: number,
     beforeLoop: () => void,
     outputsChanged: () => void
 }
@@ -48,7 +49,7 @@ const Player = forwardRef<PlayerRef, PlayerProps>((props, ref) => {
     }), [ready.current]);
 
     const processTick = () => {
-        const {melody, metronome, loopRange, loop, beforeLoop} = propsref.current
+        const {melody, metronome, loopRange, loop, beforeLoop, metronomeOutput} = propsref.current
         if (!ready.current) {
             return
         }
@@ -69,13 +70,13 @@ const Player = forwardRef<PlayerRef, PlayerProps>((props, ref) => {
 
             if (metronome) {
                 if (pos.current === 0) {
-                    webMidi.current.outputs[3].channels[1].playNote('A#5', {
+                    webMidi.current.outputs[metronomeOutput].channels[1].playNote('A#5', {
                         duration: 200,
                         attack: 1
                     });
                 }
                 if (pos.current % (NoteType.quarter * frames) === 0) {
-                    webMidi.current.outputs[3].channels[1].playNote('C3', {
+                    webMidi.current.outputs[metronomeOutput].channels[1].playNote('C3', {
                         duration: 200,
                         attack: 1
                     });
