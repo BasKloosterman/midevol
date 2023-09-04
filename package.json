@@ -1,0 +1,32 @@
+{
+  "name": "midievol",
+  "version": "2023.08.20",
+  "description": "",
+  "source": "./src/index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel",
+    "build": "NODE_ENV=production parcel build",
+    "check": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/lodash": "^4.14.197",
+    "@types/react": "^18.2.13",
+    "@types/react-dom": "^18.2.6",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "webmidi": "^3.1.6"
+  },
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.9.2",
+    "@parcel/validator-typescript": "^2.9.2",
+    "parcel": "^2.9.2",
+    "parcel-reporter-static-files-copy": "^1.5.0",
+    "process": "^0.11.10",
+    "typescript": "^5.1.3"
+  }
+}

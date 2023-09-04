@@ -1,0 +1,12 @@
+dist/
+node_modules/
+.cache/
+*.log
+.DS_Store
+.env
+.vscode/
+.parcel-cache
+scripts
+.vec
+static/pyodide
+testplayer
