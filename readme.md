@@ -2,7 +2,7 @@
 
 Exec the following commands
 
-Install project
+Install project (make sure you have node.js installed, https://nodejs.org/en)
 
 ```$ npm i```
 
