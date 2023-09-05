@@ -225,7 +225,7 @@ function clamp(n : number, [min, max]: Range) {
     return Math.max(Math.min(n, max), min)
 } 
 
-export function evoNote(note: Note, evoParams: EvoParams) : Note[] {
+export function evoNote(note: Note, isLast: boolean, evoParams: EvoParams) : Note[] {
     const ret = []
 
     const n : Note = {...note}
@@ -256,7 +256,7 @@ export function evoNote(note: Note, evoParams: EvoParams) : Note[] {
         n.volume = clamp(n.volume, [0.1, 1])
     }
 
-    if (n.position >= 0 && Math.random() < (1-evoParams.deleteChance)) {
+    if (n.position >= 0 && (Math.random() < (1-evoParams.deleteChance) || isLast) ) {
         ret.push(n)
     }
 

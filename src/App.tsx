@@ -56,8 +56,8 @@ const App = () => {
     })
 
     const evo = () => {
-        let newMelody = melody.reduce((acc, curNote) => {
-            return [...acc, ...evoNote(curNote, evoParams)]
+        let newMelody = melody.reduce((acc, curNote, idx) => {
+            return [...acc, ...evoNote(curNote, melody.length < 2 || (idx > 0 && acc.length < 2), evoParams)]
         }, [] as Note[])
 
         newMelody = instantantQuantizeScale ? newMelody.map(x => ({
