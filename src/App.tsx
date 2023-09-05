@@ -253,7 +253,7 @@ const App = () => {
 
             <Slider
                 label='Delete change'
-                value={evoParams.deleteChance * 100}
+                value={Math.round(evoParams.deleteChance * 100)}
                 setValue={(n) => setEvoParams({
                     ...evoParams,
                     deleteChance: n / 100,
