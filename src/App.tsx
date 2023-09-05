@@ -65,9 +65,11 @@ const App = () => {
             note: scaleQuantize(x.note, scales[evoParams.scale], evoParams.key)!
         })) : newMelody
 
-        const latestNote = Math.max(...newMelody.map(x => x.position))
         setLoopRange(Math.ceil(latestNote / (NoteType.quarter * frames)))
+        newMelody = newMelody.sort((a,b) => a.position - b.position)
+        const latestNote = newMelody[newMelody.length -1 ].position
         setMelody(newMelody)
+        console.log(newMelody.map(x => `${numToNote(x.note)}: ${(x.volume || 1).toFixed(2)}, ${x.position}`))
         
     }
 
