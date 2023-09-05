@@ -54,8 +54,22 @@ const Player = forwardRef<PlayerRef, PlayerProps>((props, ref) => {
             return
         }
         if (playing.current) {
+            const m = []
+            let maxTicks = 0
+            for (let idx = 0; idx < melody.length; idx++) {
+                const element = melody[idx];
+                if (element.position < pos.current) {
+                    continue
+                }
 
-            let maxTicks = Math.max(...melody.map(x => x.position))
+                if (element.position > maxTicks) {
+                    maxTicks = element.position
+                }
+
+                m.push(element)
+                
+            }
+            
             if (pos.current > maxTicks && !loop) {
                 stop()
                 return
@@ -67,6 +81,7 @@ const Player = forwardRef<PlayerRef, PlayerProps>((props, ref) => {
                 beforeLoop()
                 return
             }
+
 
             if (metronome) {
                 if (pos.current === 0) {
@@ -83,7 +98,7 @@ const Player = forwardRef<PlayerRef, PlayerProps>((props, ref) => {
                 }
             }
 
-            melody.forEach(note => {
+            m.forEach(note => {
                 if (note.position == pos.current) {
                     //play note
 
@@ -93,6 +108,9 @@ const Player = forwardRef<PlayerRef, PlayerProps>((props, ref) => {
                     channel.playNote(note.note, {duration: clock.current.noteDuration(note.length), attack: note.volume || 1});
                 }
             })
+
+
+            
             
             pos.current++
         }
