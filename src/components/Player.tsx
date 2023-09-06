@@ -1,17 +1,14 @@
-import { FC, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { Note, NoteType, frames } from "./note";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { Note, NoteType, frames } from "../lib/note";
 import { WebMidi } from "webmidi";
-import { Clock } from "./clock";
+import { Clock } from "../lib/clock";
+import Emitter, { events } from "../lib/eventemitter";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
+import { PlayerConfigState } from "../store/reducers/playerConfig";
 
 export interface PlayerProps {
-    melody: Note[]
-    metronome: boolean
-    bpm: number
-    loopRange: number
-    loop: boolean,
-    metronomeOutput: number,
-    beforeLoop: () => void,
-    outputsChanged: () => void
+    beforeLoop: () => void;
 }
 
 export interface PlayerRef {
@@ -22,8 +19,12 @@ export interface PlayerRef {
 }
 
 const Player = forwardRef<PlayerRef, PlayerProps>((props, ref) => {
-    const {outputsChanged} = props
+    const playerConfig = useSelector((s: RootState) => s.playerConfig)
+    const melody = useSelector((s: RootState) => s.melody)
     const propsref = useRef<PlayerProps>(props)
+    const melodyref = useRef<Note[]>(melody)
+    const playerConfigRef = useRef<PlayerConfigState>(playerConfig)
+    
     const pos = useRef<number>(0)
     const playing = useRef<boolean>(false)
     const webMidi = useRef<typeof WebMidi>(WebMidi)
@@ -31,8 +32,16 @@ const Player = forwardRef<PlayerRef, PlayerProps>((props, ref) => {
     const ready = useRef(false)
 
     useEffect(() => {
+        playerConfigRef.current = playerConfig
+    }, [playerConfig])
+
+    useEffect(() => {
         propsref.current = props
     }, [props])
+
+    useEffect(() => {
+        melodyref.current = melody
+    }, [melody])
 
     useImperativeHandle(ref, () => ({
         play: () => {
@@ -49,7 +58,9 @@ const Player = forwardRef<PlayerRef, PlayerProps>((props, ref) => {
     }), [ready.current]);
 
     const processTick = () => {
-        const {melody, metronome, loopRange, loop, beforeLoop, metronomeOutput} = propsref.current
+        const {beforeLoop} = propsref.current
+        const {metronome, loopRange, loop, drumsOutput} = playerConfigRef.current
+        const melody = melodyref.current
         if (!ready.current) {
             return
         }
@@ -85,13 +96,13 @@ const Player = forwardRef<PlayerRef, PlayerProps>((props, ref) => {
 
             if (metronome) {
                 if (pos.current === 0) {
-                    webMidi.current.outputs[metronomeOutput].channels[1].playNote('A#5', {
+                    webMidi.current.outputs[drumsOutput].channels[1].playNote('A#5', {
                         duration: 200,
                         attack: 1
                     });
                 }
                 if (pos.current % (NoteType.quarter * frames) === 0) {
-                    webMidi.current.outputs[metronomeOutput].channels[1].playNote('C3', {
+                    webMidi.current.outputs[drumsOutput].channels[1].playNote('C3', {
                         duration: 200,
                         attack: 1
                     });
@@ -120,12 +131,13 @@ const Player = forwardRef<PlayerRef, PlayerProps>((props, ref) => {
         (
             async () => {
                 await WebMidi.enable()
-                console.log('enabled')
                 ready.current = true
-                outputsChanged()
+                Emitter.trigger(events.eventChannelsChanged)
+                
             }
         )()
-        clock.current.subscribe(processTick)
+        
+        return clock.current.subscribe(processTick)
     }, [])
 
     return null
