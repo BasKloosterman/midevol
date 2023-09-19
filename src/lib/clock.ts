@@ -290,12 +290,16 @@ export const Clock = (function () {
     let t : ReturnType<typeof setTimeout> | null = null;
     let _subscribers : (() => void)[] = []
     let _bpm = 120
+    let _Clock : WAAClock
+    let ev : Event;
+    let context: AudioContext;
     return {
         start() {
-            const context = new AudioContext()
-            const _Clock = new WAAClock(context, {toleranceEarly: 0.1})
+            
+            context = new AudioContext()
+            _Clock = new WAAClock(context, {toleranceEarly: 0.1})
             _Clock.start()
-            _Clock.setTimeout(this._start.bind(this), 60/_bpm/frames).repeat(60/_bpm/frames)
+            ev = _Clock.setTimeout(this._start.bind(this), 60/_bpm/frames).repeat(60/_bpm/frames)
         },
         _start() {
             _subscribers.forEach(fn => fn())
@@ -304,6 +308,10 @@ export const Clock = (function () {
             t && clearTimeout(t)
         },
         setBPM(bpm: number) {
+            if (_Clock) {
+                _Clock.timeStretch(context.currentTime, [ev], _bpm / bpm)
+
+            }
             _bpm = bpm
         },
         subscribe(fn: () => void) {

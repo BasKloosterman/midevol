@@ -5,7 +5,7 @@ import { WebMidi } from 'webmidi';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { PlayerConfigState, updateSettings } from '../store/reducers/playerConfig';
-import { updateEvoParams } from '../store/reducers/evoParams';
+import { qAll, qSmall, updateEvoParams } from '../store/reducers/evoParams';
 import Emitter, { events } from '../lib/eventemitter';
 import { numToNote, scales } from '../lib/note';
 
@@ -40,6 +40,18 @@ const Config: FC = () => {
                             checked={playerConfig.metronome}
                             onChange={(e) =>
                                 setPlayerConfig('metronome', e.target.checked)
+                            }
+                        />
+                    </label>
+                </div>
+                <div className="c-settings-item">
+                    <label style={{ display: 'block' }}>
+                        quantizeTime{' '}
+                        <input
+                            type="checkbox"
+                            checked={evoParams.positionChangeValuesAbsolute != qAll}
+                            onChange={(e) =>
+                                setEvoParams('positionChangeValuesAbsolute', e.target.checked ? qSmall : qAll)
                             }
                         />
                     </label>
@@ -125,11 +137,26 @@ const Config: FC = () => {
                     </select>
                 </div>
             </div>
-
+            <Slider
+                label="BPM"
+                value={playerConfig.bpm}
+                setValue={(n) => setPlayerConfig('bpm', n)}
+                display={(v) => `${v}bpm`}
+                min={30}
+                max={240}
+            />
+            <Slider
+                label="Effective scale percentage"
+                value={Math.round(evoParams.effectiveScalePercentage * 100)}
+                setValue={(n) => setEvoParams('effectiveScalePercentage', n / 100)}
+                min={0}
+                max={100}
+                display={(v) => `${v}%`}
+            />
             <Slider
                 label="Duplication change percentage"
                 value={Math.round(evoParams.duplicationChange * 100)}
-                setValue={(n) => setEvoParams('duplicationChange', n / 100)}
+                setValue={(n) => setEvoParams('duplicationChange',n /100)}
                 display={(v) => `${v}%`}
             />
             <Slider
@@ -169,10 +196,13 @@ const Config: FC = () => {
                 display={(v) => `n ^ ${v}`}
             />
             <Slider
-                label="Stretch change percentage"
-                value={Math.round(evoParams.stretchChange * 100)}
-                setValue={(n) => setEvoParams('stretchChange', n / 100)}
-                display={(v) => `${v}%`}
+                label="Stretch at density"
+                value={evoParams.stretchChange}
+                setValue={(n) => setEvoParams('stretchChange', n)}
+                display={(v) => `${v}`}
+                min={0.5}
+                max={30}
+                
             />
             <Slider
                 label="Stretch change steepness"

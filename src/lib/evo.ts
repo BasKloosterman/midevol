@@ -1,5 +1,31 @@
 import { Note, numToNote, scales } from './note';
 
+export const genEffectiveScale = ({scale: scaleKey, effectiveScalePercentage}: EvoParams) => {
+    let effectiveScale = [];
+      
+    let scale = [...scales[scaleKey]];
+    const noteCount = Math.max(1, Math.round(scale.length * effectiveScalePercentage))
+    
+    let idx = 0;
+  
+    while (effectiveScale.length < noteCount) {
+      
+  
+      if (passDiceRoll(0.01)) {
+        effectiveScale.push(scale[idx])
+        scale = scale.filter((_, i) => i != idx)
+      }
+      idx++
+      if (scale.length <= idx) {
+        idx = 0
+      }
+    }
+  
+    effectiveScale = effectiveScale.sort()
+    console.log('effectiveScale', effectiveScale)
+    return effectiveScale
+  }
+
 export const scaleQuantize = (note: number, scale: number[], key: number) => {
     let found = false;
     let target = note % 12;
@@ -58,6 +84,24 @@ export const scaleQuantize = (note: number, scale: number[], key: number) => {
 type Range = [number, number];
 type Ramp = number[];
 
+export const quantizePosition = (position: number, notes: number[]) : number => {
+    const minDiff = notes.reduce((min, cur) => {
+        // 75; [80, 65]
+        const diffA = (position % cur) * -1 // -75, -10
+        const diffB = cur - (position % cur) // 5, 55
+
+        const diff = Math.abs(diffA) < Math.abs(diffB) ? diffA : diffB
+
+        if (Math.abs(diff) < Math.abs(min)) {
+            return diff
+        }
+
+        return min
+    }, 9999)
+
+    return position + minDiff
+}
+
 export interface EvoParams {
     duplicationChange: number;
     toneChange: number;
@@ -78,11 +122,14 @@ export interface EvoParams {
     stretchChangeSteepness: number;
     stretchChangeValues: number[];
     scale: keyof typeof scales;
+    effectiveScale: number[];
+    effectiveScalePercentage: number;
+    effectiveScaleChange: number;
     volumeChange: number;
     key: number;
 }
 
-function passDiceRoll(percentage: number): boolean {
+export function passDiceRoll(percentage: number): boolean {
     return Math.random() < percentage;
 }
 
@@ -97,7 +144,7 @@ function randInvert(n: number): number {
     return Math.random() < 0.5 ? n : n * -1;
 }
 
-function execRamp(values: number[], ramp: Ramp): number {
+export function execRamp(values: number[], ramp: Ramp): number {
     const diceRoll = Math.random();
     let acc = 0;
     for (let idx = 0; idx < ramp.length; idx++) {
@@ -128,7 +175,7 @@ const calcRamp = (values: number[], steepness: number) => {
     return x.map((y) => y * c);
 };
 
-const execWithRamp = (values: number[], steepness: number) => {
+export const execWithRamp = (values: number[], steepness: number) => {
     return execRamp(values, calcRamp(values, steepness));
 };
 
@@ -154,7 +201,7 @@ export function evoNote(
         );
         n.note = scaleQuantize(
             clamp(n.note, [evoParams.toneMin, evoParams.toneMax]),
-            scales[evoParams.scale],
+            evoParams.effectiveScale,
             evoParams.key
         )!;
     }
@@ -177,15 +224,6 @@ export function evoNote(
             execWithRamp(
                 evoParams.positionChangeValuesAbsolute,
                 evoParams.positionChangeSteepness
-            )
-        );
-    }
-
-    if (passDiceRoll(evoParams.stretchChange)) {
-        n.position += randInvert(
-            execWithRamp(
-                evoParams.stretchChangeValues,
-                evoParams.stretchChangeSteepness
             )
         );
     }

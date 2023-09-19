@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef } from 'react';
 import { Note, NoteType, frames, numToNote, scales } from './lib/note';
-import { evoNote, scaleQuantize } from './lib/evo';
+import { evoNote, execWithRamp, passDiceRoll, quantizePosition, scaleQuantize } from './lib/evo';
 import Player, { PlayerRef } from './components/Player';
 import { Link, Outlet } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -42,15 +42,31 @@ const App: FC = () => {
                   ...x,
                   note: scaleQuantize(
                       x.note,
-                      scales[evoParams.scale],
+                      evoParams.effectiveScale,
                       evoParams.key
                   )!
               }))
             : newMelody;
 
         newMelody = newMelody.sort((a, b) => a.position - b.position);
+        let latestNote = newMelody[newMelody.length - 1].position;
+    
+        const noteDensity = newMelody.length / (latestNote / 60)
+        if (noteDensity > evoParams.stretchChange) {
+            const opschuiven = execWithRamp(
+                evoParams.stretchChangeValues,
+                evoParams.stretchChangeSteepness
+            )
+            newMelody = newMelody.map(n  => ({...n, position: 
+                quantizePosition(
+                    Math.round(n.position + ((n.position / latestNote) * opschuiven)),
+                    evoParams.positionChangeValuesAbsolute
+                )
+            }))
+        }
+        console.log('noteDensity', noteDensity)
 
-        const latestNote = newMelody[newMelody.length - 1].position;
+        latestNote = newMelody[newMelody.length - 1].position;
         let loopRange_ = Math.ceil(latestNote / (NoteType.quarter * frames));
         if (latestNote % (NoteType.quarter * frames) === 0) {
             loopRange_ += 1;
@@ -103,3 +119,4 @@ const App: FC = () => {
 };
 
 export default App;
+

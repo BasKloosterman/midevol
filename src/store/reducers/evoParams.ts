@@ -1,7 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { EvoParams, range } from '../../lib/evo';
-import { NoteType, frames } from '../../lib/note';
+import { EvoParams, genEffectiveScale, passDiceRoll, range } from '../../lib/evo';
+import { NoteType, frames, scales } from '../../lib/note';
+
+export const qSmall = [NoteType.sixteenth * frames, NoteType.eight * frames]
+export const qAll = range(0,frames * 2)
 
 export const initialState: EvoParams = {
     duplicationChange: 0.1,
@@ -12,8 +15,8 @@ export const initialState: EvoParams = {
     toneMax: 96,
     positionChange: 0.1,
     positionChangeSteepness: 0,
-    positionChangeValuesAbsolute: [NoteType.sixteenth * frames, NoteType.eight * frames],
-    stretchChange: 0.1,
+    positionChangeValuesAbsolute: qSmall,
+    stretchChange: 6,
     stretchChangeSteepness: 0,
     stretchChangeValues: [NoteType.quarter * frames, NoteType.half * frames],
     durationChange: 0.1,
@@ -22,10 +25,15 @@ export const initialState: EvoParams = {
     durationMax: NoteType.whole + NoteType.half,
     durationMin: NoteType.thirtysecond,
     deleteChance: 0.02,
-    scale: 'blues',
     volumeChange: 0.3,
     key: 0, // c
+    scale: 'dorian',
+    effectiveScale: [],
+    effectiveScalePercentage: 0.6,
+    effectiveScaleChange: 0.01
 }
+
+initialState.effectiveScale = genEffectiveScale(initialState)
 
 export const evoParamsSlice = createSlice({
   name: 'evoParams',
@@ -35,7 +43,20 @@ export const evoParamsSlice = createSlice({
         state: EvoParams,
         action: PayloadAction<{key: K; value: EvoParams[K]}>,
     ) {
-        state[action.payload.key] = action.payload.value;
+        if (action.payload.key == 'scale' || action.payload.key == 'effectiveScalePercentage' ) {
+            
+            if (action.payload.key === 'scale') {
+              state.scale = action.payload.value as keyof typeof scales
+            } else {
+              state.effectiveScalePercentage = action.payload.value as number
+            }
+
+            
+            state.effectiveScale = genEffectiveScale(state)
+            
+        } else {
+            state[action.payload.key] = action.payload.value;
+        }
 
         return state;
     },
