@@ -3,7 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { EvoParams, range } from '../../lib/evo';
 import { NoteType, frames } from '../../lib/note';
 
-const initialState: EvoParams = {
+export const initialState: EvoParams = {
     duplicationChange: 0.1,
     toneChange: 0.1,
     toneChangeSteepness: 3,
@@ -39,11 +39,14 @@ export const evoParamsSlice = createSlice({
 
         return state;
     },
+    resetEvoParams: (state, event: PayloadAction<EvoParams>) => {
+      return event.payload
+    }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { updateEvoParams } = evoParamsSlice.actions
+export const { updateEvoParams, resetEvoParams } = evoParamsSlice.actions
 
 export default evoParamsSlice.reducer
 

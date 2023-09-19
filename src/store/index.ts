@@ -2,13 +2,15 @@ import { configureStore } from '@reduxjs/toolkit'
 import playerConfigReducer from './reducers/playerConfig'
 import evoParamsReducer from './reducers/evoParams'
 import melodyReducer from './reducers/melody'
+import historyReducer from './reducers/history'
 
 
 export const store = configureStore({
   reducer: {
     playerConfig: playerConfigReducer,
     evoParams: evoParamsReducer,
-    melody: melodyReducer
+    melody: melodyReducer,
+    history: historyReducer
   },
 })
 

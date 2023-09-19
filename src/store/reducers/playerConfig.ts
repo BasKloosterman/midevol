@@ -11,7 +11,7 @@ export interface PlayerConfigState {
     bpm: number;
 }
 
-const initialState: PlayerConfigState = {
+export const initialState: PlayerConfigState = {
     loopRange: 8,
     loop: true,
     instantantQuantizeScale: true,
@@ -33,11 +33,14 @@ export const playerConfigSlice = createSlice({
 
         return state;
     },
+    resetSettings: (state, event: PayloadAction<PlayerConfigState>) => {
+      return event.payload
+    } 
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { updateSettings } = playerConfigSlice.actions
+export const { updateSettings, resetSettings } = playerConfigSlice.actions
 
 export default playerConfigSlice.reducer
 

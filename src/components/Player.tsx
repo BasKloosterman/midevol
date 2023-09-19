@@ -6,6 +6,7 @@ import Emitter, { events } from "../lib/eventemitter";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { PlayerConfigState } from "../store/reducers/playerConfig";
+import { getMelody } from "../store/reducers/melody";
 
 export interface PlayerProps {
     beforeLoop: () => void;
@@ -20,7 +21,7 @@ export interface PlayerRef {
 
 const Player = forwardRef<PlayerRef, PlayerProps>((props, ref) => {
     const playerConfig = useSelector((s: RootState) => s.playerConfig)
-    const melody = useSelector((s: RootState) => s.melody)
+    const melody = useSelector(getMelody)
     const propsref = useRef<PlayerProps>(props)
     const melodyref = useRef<Note[]>(melody)
     const playerConfigRef = useRef<PlayerConfigState>(playerConfig)

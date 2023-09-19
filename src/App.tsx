@@ -2,11 +2,11 @@ import { FC, useEffect, useRef } from 'react';
 import { Note, NoteType, frames, numToNote, scales } from './lib/note';
 import { evoNote, scaleQuantize } from './lib/evo';
 import Player, { PlayerRef } from './components/Player';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './store';
 import { updateSettings } from './store/reducers/playerConfig';
-import { updateMelody } from './store/reducers/melody';
+import { getMelody, updateMelody } from './store/reducers/melody';
 
 const App: FC = () => {
     const playerConfig = useSelector((s: RootState) => s.playerConfig);
@@ -15,12 +15,12 @@ const App: FC = () => {
 
     const dispatch = useDispatch();
 
-    const melody = useSelector((s: RootState) => s.melody);
+    const melody = useSelector(getMelody);
 
     useEffect(() => {
         dispatch(
             updateMelody(
-                melody.map((n) => ({ ...n, output: playerConfig.melodyOutput }))
+                [melody.map((n) => ({ ...n, output: playerConfig.melodyOutput })), false]
             )
         );
     }, [playerConfig.melodyOutput]);
@@ -57,7 +57,7 @@ const App: FC = () => {
         }
 
         dispatch(updateSettings({ key: 'loopRange', value: loopRange_ }));
-        dispatch(updateMelody(newMelody));
+        dispatch(updateMelody([newMelody, true]));
     };
 
     return (
@@ -80,13 +80,15 @@ const App: FC = () => {
                 >
                     Loop!
                 </button>
-                <button
+                <button style={{marginRight: 10}} 
                     onClick={() => {
                         playerRef.current?.stop();
                     }}
                 >
                     Stop!
                 </button>
+                <Link  style={{marginRight: 10}} to="/">Config</Link>
+                <Link  style={{marginRight: 10}} to="/history">History</Link>
             </div>
             <div style={{ margin: '15px 0' }}>
                 {melody
