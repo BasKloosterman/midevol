@@ -3,6 +3,7 @@ import playerConfigReducer from './reducers/playerConfig'
 import evoParamsReducer from './reducers/evoParams'
 import melodyReducer from './reducers/melody'
 import historyReducer from './reducers/history'
+import instrumentReducer from './reducers/instruments'
 
 
 export const store = configureStore({
@@ -10,7 +11,8 @@ export const store = configureStore({
     playerConfig: playerConfigReducer,
     evoParams: evoParamsReducer,
     melody: melodyReducer,
-    history: historyReducer
+    history: historyReducer,
+    instruments: instrumentReducer
   },
 })
 

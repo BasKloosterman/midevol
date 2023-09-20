@@ -16,7 +16,7 @@ const initialState: {
     tree: {
         id: initialId,
         iteration: melodyState.iteration,
-        evoParams,
+        // evoParams: {},
         melody: melodyState.current,
         playerConfig,
         children: []

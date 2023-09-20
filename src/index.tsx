@@ -7,6 +7,7 @@ import { Provider } from 'react-redux'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Config from './components/Config';
 import History from './components/History';
+import Instruments from './components/Instruments';
 
 const router = createBrowserRouter([
     {
@@ -16,6 +17,9 @@ const router = createBrowserRouter([
             path: '/',
             index: true,
             element: <Config/>
+        }, {
+            path: '/instruments',
+            element: <Instruments/>
         }, {
             path: '/history',
             element: <History/>

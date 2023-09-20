@@ -16,7 +16,7 @@ const History : FC = () => {
     const currentLeaf = useSelector(getCurrentLeaf)
     const currentIteration = useSelector(getCurrentIteration)
 
-    const evoParams = useSelector((s: RootState) => s.evoParams)
+    const evoParams = useSelector((s: RootState) => s.evoParams[1])
     const {current: melody, iteration}  = useSelector((s: RootState) => s.melody)
     const playerConfig = useSelector((s: RootState) => s.playerConfig)
     const [scale, setscale] = useState(5)
@@ -24,7 +24,7 @@ const History : FC = () => {
   
     const resetMelody = (tree: HistoryNode) => {
         dispatch(resetMelody_({melody: tree.melody, iteration: tree.iteration}))
-        dispatch(resetEvoParams(tree.evoParams))
+        dispatch(resetEvoParams({instrument: 1, params: tree.evoParams!}))
         dispatch(resetSettings(tree.playerConfig))
     }
 

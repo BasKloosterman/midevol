@@ -5,7 +5,7 @@ import { Note } from "./note";
 export interface HistoryNode {
     id: string;
     iteration: number;
-    evoParams: EvoParams;
+    evoParams?: EvoParams;
     melody: Note[];
     playerConfig: PlayerConfigState
     parent?: HistoryNode;

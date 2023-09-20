@@ -7,7 +7,6 @@ export interface PlayerConfigState {
     instantantQuantizeScale: boolean; //true)
     metronome: boolean; //true)
     drumsOutput: number; //1)
-    melodyOutput: number; //0)
     bpm: number;
 }
 
@@ -17,7 +16,6 @@ export const initialState: PlayerConfigState = {
     instantantQuantizeScale: true,
     metronome: true,
     drumsOutput: 1,
-    melodyOutput: 0,
     bpm: 120,
 }
 

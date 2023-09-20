@@ -7,14 +7,14 @@ export const initialState: {
   iteration: number
 } = {
   current: [
-    {output: 0, volume: 1,channel: 1, note: 60, length: NoteType.sixteenth, position: calcPos(4, 1, 1, NoteType.quarter, 1)},
-    {output: 0, volume: 1,channel: 1, note: 60, length: NoteType.sixteenth, position: calcPos(4, 1, 2, NoteType.quarter, 1)},
-    {output: 0, volume: 1,channel: 1, note: 60, length: NoteType.sixteenth, position: calcPos(4, 1, 3, NoteType.quarter, 1)},
-    {output: 0, volume: 1,channel: 1, note: 60, length: NoteType.sixteenth, position: calcPos(4, 1, 4, NoteType.quarter, 1)},
-    {output: 0, volume: 1,channel: 1, note: 60, length: NoteType.sixteenth, position: calcPos(4, 2, 1, NoteType.quarter, 1)},
-    {output: 0, volume: 1,channel: 1, note: 60, length: NoteType.sixteenth, position: calcPos(4, 2, 2, NoteType.quarter, 1)},
-    {output: 0, volume: 1,channel: 1, note: 60, length: NoteType.sixteenth, position: calcPos(4, 2, 3, NoteType.quarter, 1)},
-    {output: 0, volume: 1,channel: 1, note: 60, length: NoteType.sixteenth, position: calcPos(4, 2, 4, NoteType.quarter, 1)},
+    {output: 0, volume: 1,channel: 1, note: 60, length: NoteType.sixteenth, position: calcPos(4, 1, 1, NoteType.quarter, 1), instrument: 1},
+    {output: 0, volume: 1,channel: 1, note: 60, length: NoteType.sixteenth, position: calcPos(4, 1, 2, NoteType.quarter, 1), instrument: 1},
+    {output: 0, volume: 1,channel: 1, note: 60, length: NoteType.sixteenth, position: calcPos(4, 1, 3, NoteType.quarter, 1), instrument: 1},
+    {output: 0, volume: 1,channel: 1, note: 60, length: NoteType.sixteenth, position: calcPos(4, 1, 4, NoteType.quarter, 1), instrument: 1},
+    {output: 1, volume: 1,channel: 1, note: 60, length: NoteType.sixteenth, position: calcPos(4, 2, 1, NoteType.quarter, 1), instrument: 2},
+    {output: 1, volume: 1,channel: 1, note: 60, length: NoteType.sixteenth, position: calcPos(4, 2, 2, NoteType.quarter, 1), instrument: 2},
+    {output: 1, volume: 1,channel: 1, note: 60, length: NoteType.sixteenth, position: calcPos(4, 2, 3, NoteType.quarter, 1), instrument: 2},
+    {output: 1, volume: 1,channel: 1, note: 60, length: NoteType.sixteenth, position: calcPos(4, 2, 4, NoteType.quarter, 1), instrument: 2},
   ],
   iteration: 0
 }

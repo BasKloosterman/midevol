@@ -16,6 +16,7 @@ export interface Note {
     output: number;
     channel: number;
     volume?: number;
+    instrument: number;
 }
 
 export const calcPos = function (
