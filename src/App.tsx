@@ -64,7 +64,6 @@ const App: FC = () => {
                 )
             }))
         }
-        console.log('noteDensity', noteDensity)
 
         latestNote = newMelody[newMelody.length - 1].position;
         let loopRange_ = Math.ceil(latestNote / (NoteType.quarter * frames));
