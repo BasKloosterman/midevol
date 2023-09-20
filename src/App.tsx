@@ -81,6 +81,7 @@ const App: FC = () => {
                 <Player ref={playerRef} beforeLoop={evo} />
                 <button
                     onClick={() => {
+                        dispatch(updateSettings({ key: 'loop', value: false }));
                         playerRef.current?.stop();
                         playerRef.current?.play();
                     }}
@@ -89,6 +90,7 @@ const App: FC = () => {
                 </button>
                 <button
                     onClick={() => {
+                        dispatch(updateSettings({ key: 'loop', value: true }));
                         playerRef.current?.stop();
                         playerRef.current?.play();
                     }}
