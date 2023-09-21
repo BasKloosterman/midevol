@@ -47,11 +47,11 @@ export const scaleQuantize = (note: number, scale: number[], key: number) => {
         const cur = scale[idx];
 
         if (idx > scale.length) {
-            console.log(
-                `${note}, ${numToNote(note)} => ${cur}, ${numToNote(
-                    cur
-                )} => ${note}, ${numToNote(note)}`
-            );
+            // console.log(
+            //     `${note}, ${numToNote(note)} => ${cur}, ${numToNote(
+            //         cur
+            //     )} => ${note}, ${numToNote(note)}`
+            // );
             return note;
         }
         if (cur > target) {
@@ -60,16 +60,16 @@ export const scaleQuantize = (note: number, scale: number[], key: number) => {
             const diffB = Math.abs(cur - target);
             if (diffA === diffB) {
                 const ret = note + (Math.random() > 0.5 ? diffA * -1 : diffB);
-                console.log(
-                    `${note}, ${numToNote(note)} => ${ret}, ${numToNote(ret)}`
-                );
+                // console.log(
+                //     `${note}, ${numToNote(note)} => ${ret}, ${numToNote(ret)}`
+                // );
                 return ret;
             }
 
             const ret = note + (diffA < diffB ? diffA * -1 : diffB);
-            console.log(
-                `${note}, ${numToNote(note)} => ${ret}, ${numToNote(ret)}`
-            );
+            // console.log(
+            //     `${note}, ${numToNote(note)} => ${ret}, ${numToNote(ret)}`
+            // );
             return ret;
         }
 

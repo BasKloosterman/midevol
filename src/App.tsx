@@ -16,15 +16,7 @@ const App: FC = () => {
     const dispatch = useDispatch();
 
     const melody = useSelector(getMelody);
-    // const evo = () => {}
-    // useEffect(() => {
-    //     dispatch(
-    //         updateMelody(
-    //             [melody.map((n) => ({ ...n, output: playerConfig.melodyOutput })), false]
-    //         )
-    //     );
-    // }, [playerConfig.melodyOutput]);
-
+    
     const evo = () => {
         let newMelody = melody.reduce((acc, curNote, idx) => {
             const evoParams = allEvoParams[curNote.instrument]

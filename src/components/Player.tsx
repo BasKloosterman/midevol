@@ -120,8 +120,6 @@ const Player = forwardRef<PlayerRef, PlayerProps>((props, ref) => {
 
                     let output = webMidi.current.outputs[note.output];
                     let channel = output.channels[note.channel];
-
-                    // console.log('output', output)
                     
                     channel.playNote(note.note, {duration: clock.current.noteDuration(note.length), attack: note.volume || 1});
                 }

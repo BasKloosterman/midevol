@@ -9,17 +9,19 @@ import { qAll, qSmall, updateEvoParams } from '../store/reducers/evoParams';
 import Emitter, { events } from '../lib/eventemitter';
 import { numToNote, scales } from '../lib/note';
 import { Instrument } from '../store/reducers/instruments';
+import { changeInstrumentChannel, changeInstrumentOutput } from '../store/reducers/actions';
+import { range } from 'lodash';
 
 interface InstrumentProps {
     instrument: Instrument
 }
 
 const Instrument: FC<InstrumentProps> = ({instrument}) => {
+    // const instruments = useSelector((s :RootState) => s.instruments)
+    // console.log(Object.values(instruments).map(x => ({c: x.channel, o: x.output})))
     const evoParams = useSelector((s :RootState) => s.evoParams[instrument.id])
     const [outputs, setOutputs] = useState(WebMidi.outputs)
     const dispatch = useDispatch()
-
-    console.log('evoParams', instrument.id, evoParams)
 
     function setInstrument<K extends keyof Instrument> (key: K, value: Instrument[K]) {
         dispatch(updateInstrumentParams({instrument: instrument.id, key, value}))
@@ -97,7 +99,12 @@ const Instrument: FC<InstrumentProps> = ({instrument}) => {
                         value={instrument.output}
                         id=""
                         onChange={(x) =>
-                            setInstrument('output', parseInt(x.target.value))
+                            dispatch(
+                                changeInstrumentOutput({
+                                    instrument: instrument.id,
+                                    output:parseInt(x.target.value)
+                                })
+                            )
                         }
                     >
                         {outputs.map((x, idx) => (
@@ -114,11 +121,16 @@ const Instrument: FC<InstrumentProps> = ({instrument}) => {
                         value={instrument.channel}
                         id=""
                         onChange={(x) =>
-                            setInstrument('channel', parseInt(x.target.value))
+                            dispatch(
+                                changeInstrumentChannel({
+                                    instrument: instrument.id,
+                                    channel:parseInt(x.target.value)
+                                })
+                            )
                         }
                     >
-                        {outputs.map((x, idx) => (
-                            <option key={idx} value={idx}>
+                        {range(1,9).map(n => ({name: 'Channel ' + n})).map((x, idx) => (
+                            <option key={idx} value={idx + 1}>
                                 {x.name}
                             </option>
                         ))}
